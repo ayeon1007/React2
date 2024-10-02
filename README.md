@@ -1,5 +1,66 @@
 # React2
 
+# 2024-10-2
+
+```js
+PAGE - ROUTER;
+import { useRouter } from "next/router";
+
+export default function Joo() {
+  const router = useRouter();
+  const { blog, joo, id, name, pid } = router.query;
+  console.log(blog, joo, id, name, pid);
+
+  return (
+    <>
+      <h1>joo: {joo}</h1>
+      <h1>blog:{blog}</h1>
+      <h1>id : {id}</h1>
+      <h1>name: {name}</h1>
+      <h1>pid: {pid}</h1>
+    </>
+  );
+}
+//http://localhost:3000/blog/joo?id=1234&name=jo&pid=1122
+```
+
+```js
+PAGE - ROUTER;
+import { useRouter } from "next/router";
+
+export default function Joo() {
+  const router = useRouter();
+  const { joo, id, name, pid } = router.query;
+  console.log(joo, id, name, pid);
+
+  return (
+    <>
+      <h1>joo[0]: {joo[0]}</h1>
+      <h1>joo[1]: {joo[1]}</h1>
+      <h1>joo[2]: {joo[2]}</h1>
+      <h1>id : {id}</h1>
+      <h1>name: {name}</h1>
+      <h1>pid: {pid}</h1>
+    </>
+  );
+}
+//http://localhost:3000/blog/joo/bar/joobar
+```
+
+```js
+APP - ROUTER;
+export default function Page(props) {
+  console.log(props);
+  return (
+    <>
+      <h1>joo:{props.params.joo}</h1>
+      <h1>id:{props.searchParams.id}</h1>
+      <h1>name:{props.searchParams.name}</h1>
+    </>
+  );
+}
+```
+
 # 2024-9-25
 
 Next.js 기초와 내장 컴포넌트
