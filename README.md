@@ -1,5 +1,72 @@
 # React2
 
+# 2024-10-23
+
+Image component - Remote
+
+- Pixabay와 같은 외부 이미지를 사용하려면 next.config.mjs에 URL을 추가해야함
+- 만일 파일이 없다면 Project Root에 추가하면 됨
+
+```js
+// next.config.mjs
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocal: "https",
+        hostname: "cdn-pixabay.com",
+      },
+    ],
+  },
+};
+
+export default nextConfig;
+
+// about/page.jsx
+{
+  /*외부 이미지 출력*/
+}
+<Image
+  src="https://cdn.pixabay.com/photo/2023/08/09/15/06/child-8179655_1280.jpg"
+  alt="신발"
+  width={300}
+  height={500}
+/>;
+```
+
+- 서비스에 따라 도메인은 차이날 수 있음
+  -pixabay의 경우 원하는 이미지를 우클릭하고 이미지 주소 복사로 주소를 복사 -나머지는 local image사용법과 같음
+
+코드 구성과 데이터 불러오기
+디렉토리 구조 구성
+
+- next.js에서는 특정 파일과 디렉토리가 저장된 위치에 있어야 함 \_app.js 나 document.js 파일,
+  pagee/ 와 public/
+  -Node moudules/: 프로젝트와 의존성 패키지를 설치하는 디렉토리
+- pages/ : 애플리케이션의 페이지 파일을 저장하고 라우팅 시스템 관리
+- public/ : 컴파일된 CSS및 자바스크립트 파일, 이미지, 아이콘 등의 정적 자원 관리
+- styles/ : 스타일링 포멘(CSS, SASS, LESS등)과 관계없이 스타일링 모듈 관리
+
+컴포넌트 구성
+
+- 컴포넌트는 세가지로 분류, 각 컴포넌트와 관련된 스타일 및 텍스트 파일을 같은 곳에 두어야 함
+- 코드를 더 효율적으로 구성하기 위해 아토믹 디자인 원칙에 따라 디렉토리를 구성
+- atoms : 가장 기본적인 컴포넌트 관리 ex : button, input, p와 같은 표준 html요소를 감싸는 용도로 사용
+- molecules : atom에 속한 컴포넌트 여러 개를 조합하여 복잡한 구조로 만든 컴포넌트 관리 ex : input, label을 합쳐서 만든 새로운 컴포넌트
+- organisms : molecules , atoms룰 섞어서 더 어렵게! 만든 컴포넌트 관리 ex : footer, carousel 컴포넌트
+- templates : 위의 모든 컴포넌트를 어떻게 배치할 지 결정해서 사용자가 쉽게 접근할 수 있는 페이지
+
+유틸리티 페이지
+
+- 컴포넌트를 만들지 않는 코드 파일을 유틸리티 스크립트라고 함
+
+데이터 불러오기
+
+- next는 클라이언트, 서버 모두에서 데이터를 불러올 수 있음
+- 데이터 베이스에서 데이터를 가져올 수도 있지만 안전하지 않기 때문에 권장 안 함
+- next는 프런트엔드만 담당하는 것이 좋음
+
 # 2024-10-11 (보강주 수업)
 
 Next.js의 Layout
@@ -94,16 +161,18 @@ Link component
 - Link component를 이용해서 Narbar component를 만들어봄
 import Link from "next/link";
 
-export default function Narbar() {
-  return(
+export default function Navbar() {
+  return (
     <nav>
-      <Link href="/">HOME</link>
-      <Link href="foo">foo</link>
-      <Link href="about">about</link>
-      <Link href="help">help</link>
+      <Link href="/">HOME</Link>
+      <Link href="/foo">foo</Link>
+      <Link href="/about">about</Link>
+      <Link href="/help">help</Link>
     </nav>
   );
 }
+
+
 ```
 
 Link vs router.push
@@ -119,6 +188,8 @@ Link vs router.push
 - 따라서 특별한 경우가 아니면 link 컴포넌트 사용을 권장
 
 Image component - local
+
+Static Resource
 
 - 정적 자원 중 이미지 파일은 SEO에 많은 영향을 미침
 - 다운로드 시간이 많이 걸리고, 렌더링 후에 레이아웃이 변경되는 등 UX에 영향을 마침
@@ -147,7 +218,7 @@ Image Component - local
 
 - 정적 자원은 기본적으로 public 디렉토리에 저장
 - 정적 자원은 번들링 이후에도 변하지 않기 때문
-- 여러 종류의 정적 자원을 사용할 경우 public의 root에 각각 디렉토리를 만들어 사용
+- 여러 종류의 정적 자원을 사용할 경우 public의 root에 각각 디렉토리를 만들어 사용!
 - 이미지를 불러오는 방법봐 import하는 방법 2가지
 - 직접 불러올 땐 경로는 /images/[이미지이름.확장자]로 하기
 
@@ -159,7 +230,7 @@ export default function About() {
     <div>
       <h1>About</h1>
       <p>This is the about page</p>
-      <Image src=[foo] alt="사람" width={300} height={500} />
+      <Image src="/image/person.jpg" alt="사람" width={300} height={500} />
     </div>
   );
 }
