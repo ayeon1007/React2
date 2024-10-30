@@ -1,5 +1,68 @@
 # React2
 
+# 202230234 조아연
+
+# 2024-10-30
+
+데이터 불러오기
+
+- Next 클라이언트와 서버 모두에서 데이터를 불러올 수 있음
+- 데이터 베이스에서 데이터를 가져올 수도 있지만 안전하지 않아 권장하지 않음. 데이터 베이스와 접근은 백엔드에서 처리하는 것이 좋음
+- Next는 프론트앤드만!
+
+서버가 데이터 불러오기  
+두가지 방법으로 HTTP 요청을 만들고 처리할 수 있음
+
+- 첫 번째는 Node의 내장 HTTP 라이브러리를 사용할 수 있다. 다만 서브파티 HTTP 클라이언트와 비교했을 때 설정하고 처리해야 할 작업이 더 많은 편...
+- 두 번째 방법은 HTTP 클라이언트 라이브러리를 사용할 수 있다. 가장 유명한 것이 Axios? 이다
+
+서버에서 REST API 사용하기
+
+- Public API는 어떤 인증이나 권한도 필요 없으며 누구나 호출할 수 있음
+- Private API는 호출 전 반드시 인증과 권한 검사를 거쳐야 함
+
+REST API - 개요
+
+- HTTP URL 동일된 자원 식별자를 이용해서 자원을 명시
+- HTTP Method를 통해 자원에 CRUD를 적용
+- REST API란 REST의 규칙을 적용한 API를 의미
+
+CRUD?
+
+- Create : 데이터 생성 (POST)
+- Read : 데이터 조회 (GET)
+- Update : 데이터 수정 (PUT(전체 수정), PACTH(조금 수정할 것들만))
+- Delete : 데이터 삭제 (DELETE)
+
+JSON Server
+
+- Backend가 개발되기 전이나, 외부 API가 결정되지 않았다면 local에 Json server를 구축하고 Frontend 개발을 하기에 적합한 node 패키지
+
+```js
+Json server 설치 명령
+npm i -g json-server
+```
+
+Axios
+
+- Next.js에서 REST API룰 다룰 떄는 보통 axios와 fetch 중 하나를 선택하는 경우가 있다
+
+Feach?
+
+- 내장 API 브라우저에 내장되어있어 별도의 설치 필요 없음
+- 스트림 처리 : 데이터를 스트리밍으로 처리할 수 있는 기능이 있어, 큰 파일을 처리하는데 유용
+
+결론은 복잡한 요청이나 에로 초리가 필요한 경우는 axios
+
+```js
+axios 설치 명령
+npm i axios
+```
+
+Axios 사용하기
+
+- axios.get()을 통해 받아온 응답 객체인 res는 단순히 JSON 데이터만 담고 있는 것이 아니라 HTTP 통신과 관련된 여러 정보들을 함께 포함하고 있다
+
 # 2024-10-23
 
 Image component - Remote
@@ -65,7 +128,7 @@ export default nextConfig;
 
 - next는 클라이언트, 서버 모두에서 데이터를 불러올 수 있음
 - 데이터 베이스에서 데이터를 가져올 수도 있지만 안전하지 않기 때문에 권장 안 함
-- next는 프런트엔드만 담당하는 것이 좋음
+- next는 프론트엔드만 담당하는 것이 좋음
 
 # 2024-10-11 (보강주 수업)
 
