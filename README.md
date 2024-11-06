@@ -2,6 +2,108 @@
 
 # 202230234 조아연
 
+# 2024-11-6
+
+CSS와 내장 스타일링 메서드  
+Styled JSX
+
+- Styled JSX는 CSS-in-JS라이브러리, 내장 모듈이기 때문에 설치가 필요 없음
+- 즉 CSS 속성 지정을 위해 자바스크립트를 사용할 수 있는 라이브러리
+
+```js
+간단한 예시 코드
+
+"use client";
+
+export default function CssEx() {
+  return (
+    <>
+      <h1>CssEx Page</h1>
+      <button className="button">버튼 1 </button>
+      <style jsx>{`
+        .button {
+          background: orangered;
+          color: white;
+        }
+      `}</style>
+    </>
+  );
+}
+```
+
+CSS-in-JS 단점
+
+- IDE나 코드 편집기 등 개발 도구에 대한 지원 부족
+- 문법 하이라이팅, 자동 완성, 린트(lint)기능을 제공하지 않음
+- 코드 내에서 CSS에 대한 의존성이 점점 커지기 때문에 앱 번들도 커지고 느려짐
+- 서버에 미리 CSS를 생성해도 클라이언트에서 리엑트 하이드레이션이 끝나면 CSS를 다시 생성 해야함
+
+CSS Module
+
+- CSS-in-JS의 단점을 회피하기 위한 좋은 방법은 CSS Module이다
+
+```js
+간단한 예시 코드
+import styles from "./page.module.css"
+
+export default function Home() {
+  return (
+    <>
+    <h1 className = {styles.main} >북쪽에 계신 아름다운 메리메리</h1>
+    </>
+  )
+}
+```
+
+- 클래스들은 컴포넌트 스코프를 갖는다
+- 생성된 HTML 페이지 소스를 보면 class 이름이 바뀌어 있는 것을 확인할 수 있음
+- Styled JSX때와 마찬가지로 이런 고유한 이름 때문에 다른 파일이라면 같은 class명을 사용해도 충돌이 일어나지 않음
+- 만들 전역 CSS를 선언하고 싶다면 styles/globals.css를 만들고 사용
+- 파일명은 반드시 globals가 아니어도 되지만 암묵적 합의는 지키는 것이 좋음
+
+```js
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+```
+
+SASS
+
+- Next에서 기본으로 지원하는 건 처리기
+- 단 패키지 설치가 필요 $npm install sass
+- SASS 및 SCSS 문법으로 CSS Module을 만들고 사용할 수 있음
+
+```js
+import scss from "../styles/joo.module.scss";
+
+export default function SassEx() {
+  return (
+    <>
+      <div>
+        <h1 className={scss.woo}>SassEx Page</h1>
+        <button className={scss.bar}>Button</button>
+      </div>
+    </>
+  );
+}
+```
+
+```js
+$joo: red;
+
+.woo {
+  color: black;
+  background-color: aqua;
+}
+
+.bar {
+  color: $joo;
+}
+
+```
+
 # 2024-10-30
 
 데이터 불러오기
