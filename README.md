@@ -2,6 +2,63 @@
 
 # 202230234 조아연
 
+# 2024-11-13
+
+UI 프레임 워크
+
+UI 라이브러리
+
+- UI 라이브러리, 프레임워크, 유틸리티 기능이 필수는 아님
+- 다만 생산성 향상 및 UI의 일관성을 유지하는데 많은 도움을 받을 수 있음
+- ex : chakra ui, tailwind css, headless ui 등 (bootstrap도 있음)
+
+chakra ui
+
+- 오픈소스 컴포넌트 라이브러리로, 모듈링이 되어 있고, 접근성이 뛰어나며 보기 좋은 UI를 만들 수 있음
+- 버튼, 모달, 입룍 등 다양한 내장 컴포넌트 제공
+- dark mode, light mode 지원
+- chakra ui의 getColorMode훅을 사용하여 현재 사용하는 컬러 모드를 확인할 수 있음
+- 기본 컴포넌트를 조합해서 새로운 컴포넌트를 쉽게 만들 수 있음
+- TypeScript로 작성되었으며 개발자에게 편함
+
+tailwind css
+
+- 다른 프레임워크와는 다르게 CSS규칙만을 제공
+- 자바스크립트 모듈이나 리액트 컴포넌트를 제공하지 않기 때문에 필요한 경우 직접 만들어서 사용
+- 변수값을 조정하여 개성있는 디자인을 만둘 수 있고, 자유도가 높다
+- dark mode, light mode 지원
+- 빌드 시점에 사용하지 않는 클래스는 제거 되기 때문에 높은 수준의 최적화를 지원
+- CSS 클래스와 접두사를 활용한 모바일 데스크톱, 태블릿 화면에서 원하는 규칙을 지정할 수 있음
+
+headless ui
+
+- TailwindCss를 만든 팀의 무료 오픈소스 프로젝트
+- TailwindCss는 웹 컴포넌트 안에서 사용할 수 있는 CSS클래스만 제공
+- 따라서 모달, 버튼 등 동적인 컴포넌트를 만드려면 직접 자바스크립트 코드를 작성해야 함
+- 이런 단점을 보완하기 위해 headless ui가 등장
+
+Next.js의 UI Framework  
+Project 생성
+
+- tailwind 사용을 위해 프로젝트를 다시 생성
+- 프로젝트를 다시 생성하지 않고 설정할 수도 있지만 과정이 다소 복잡
+- 프로젝트는 Next.js 14로 함
+
+```js
+$ npx create-next-app@14
+
+프로젝트 이름은 자유, 나머지는 모드 yes로 한다
+(난 tailwind, TypeScript만 yes함 )
+```
+
+- 구글에서 chakra ui 검색하고 사이트에 접속
+- Home 화면에서 Start building 버튼을 클릭하고 Next.js 선택
+- App/chakra/page.js 파일 생성
+
+React-icon
+
+-
+
 # 2024-11-6
 
 CSS와 내장 스타일링 메서드  
