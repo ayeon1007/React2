@@ -2,6 +2,170 @@
 
 # 202230234 조아연
 
+# 2024-11-20
+
+Next.js의 Props 전달 방법  
+Props 흐름의 이해
+
+- Next.js의 데이터 흐름은 단방향으로 이루어짐
+- 즉 parents에서 child component의 방향으로 props의 흐름이 이루어짐
+- 따라서 계층 구조가 복잡해지면 props drilling 문제가 발생
+
+- 중간에 위치한 컴포넌트에 불필요한 props를 전달해야하는문제
+- 타겟 컴포넌트까지 props가 전달되지 않을 경우 원인 규명의 어려움
+- 필요이상으로 코드가 복잡해지는 문제(이를 해결하려면 props를 전역으로 사용하면 됨)  
+  (next.js에서 props를 전역으로 사용하기 위해 Context API, Redux등을 사용)
+
+```js
+//page.jsx
+import ComponentA from "../ui/ComponentA";
+
+export default function PropsFlow() {
+  const data = { id: 1, name: "joo", message: "Hello world" };
+  return (
+    <>
+      <h1>Props Flow</h1>
+      <ComponentA data={data} />
+    </>
+  );
+}
+```
+
+```js
+// ComponentA.jsx
+import ComponentB from "./ComponentB";
+
+export default function ComponentA({ data }) {
+  return (
+    <>
+      <h1>ComponentA</h1>
+      <ComponentB data={data} /> {/* ComponentB에 data 전달 */}
+      <p>ComponentA - {data.id}</p> {/* 받은 데이터에서 id 출력 */}
+    </>
+  );
+}
+```
+
+```js
+// ComponentB.jsx 굳이...?
+export default function ComponentB({ data }) {
+  return (
+    <div>
+      <p>ComponentB - ID: {data.id}</p>
+      <p>ComponentB - Name: {data.name}</p>
+      <p>ComponentB - Message: {data.message}</p>
+    </div>
+  );
+}
+```
+
+```
+**page.jsx**에서 foo 데이터를 정의하고 이를 **ComponentA**에 전달.
+**ComponentA**는 data prop을 받아 **ComponentB**에 전달.
+**ComponentB**는 data를 받아 화면에 출력.
+```
+
+props 흐름의 이해
+
+- ComponentA, B, C props-flow 페이지 상호간에는 계층 구조를 갖고 있지 않음
+- 아직 어느 쪽에서도 component호출하지 않았기 때문
+- 그러나 어느 쪽이든 component를 호출 하는 순간 호출한 쪽은 parent가 되고 호출 받은 쪽은 child가 됨
+- 이것은 component간 component와 page간 모두 적용
+- 관계가 한번 성립되면 chile가 parent를 호출할 순 없음
+
+Context API 개요
+
+- Context는 UX 구축에 많이 사용되는 React의 기능
+- 일반적으로 props는 부모에서 자식으로 전달되는 단방향 통신을 함
+- Context API는 특정 component가 props를 사용하지 않고 하위 component를 포함한 모든 component에 데이터를 공유할 수 있는 기능 제공
+- 즉 전역으로 데이터를 사용할 수 있도록 해줌
+- 간혹 Consumer를 useContext대신 사용하는 경우가 있지만 funtion형 component에서는 많이 사용하지 않음
+
+```js
+"use client";
+
+import { createContext, useState, useEffect } from "react";
+
+// Context 생성
+const ThemeContext = createContext();
+
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState("light");
+
+  // 테마 토글 함수
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
+
+  useEffect(() => {
+    document.body.className = theme; // 테마 변경 시 body 클래스 변경
+  }, [theme]);
+
+  return (
+    // ThemeContext.Provider를 사용해 값 전달
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+export default ThemeContext;
+```
+
+```js
+"use client";
+import { useContext } from "react";
+import ThemeContext from "../context/ThemeContext";
+
+const ThemeToggleButton = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
+  return (
+    <button onClick={toggleTheme}>
+      {theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+    </button>
+  );
+};
+
+export default ThemeToggleButton;
+```
+
+- 앞에서 작성한 코드 상단에 'use client' 지시문이 있음
+- next.js에서 'use client'룰 사용하는 이유는 서버 컴포넌트와 클라이언트 컴포넌트를 구분하기 위해서
+- next.js는 기본적으로 서버에소 렌더링하도록 설계되어, 클라이언트에서만 필요한 컴포넌트를 명시적으로 지정해야할 필요가 있다
+- 'use client'를 컴포넌트 상단에 선언하면 해당 컴포넌트는 클라이언트에서만 랜더링되며, 주로 상태 관리나 브라우저 전용 API사용이 필요한 경우에 사용
+
+Context API vs Redux  
+[Context API]
+
+- React에서 기본으로 제공하는 상태 관리 도구로, 외부 라이브러리 설치 없이 사용 가능
+- Context API는 주로 전역 상태를 관리하는데 사용
+- ReactcreateContext()로 생성한 Context 객체와 Provider 컴포넌트를 사용해 상태를 하위 컴포넌트에 전달
+
+(장점)
+
+- 간단하고 가볍 : 외부 라이브러리 설치 필요 없음
+- 적은 절성 필요 : 간단한 구조를 갖고 있기 때문
+
+(단점)
+
+- 복잡한 상태 관리 한계 : 상태가 복잡하거나 다양한 액션을 통해 변경이 이루어져야 하는 경우 관리가 어려워질 수 있다
+- 성능문제 : 상태가 업데이트 되면 해당 상태를 사용하는 모든 하위 컴포넌트가 다시 랜더릉 되므로, 상태 범위가 넓을 경우 성능에 영향을 미칠 수 있음
+- 디버깅 도구 부족 : 상태 변경 과정을 추적하고 관리하는 도구가 제공되지 않음
+
+[Redux]
+
+- 전역 상태를 관리하기 위한 독립적인 state 관리 라이브러리
+- 상태의 변경을 예측 가능하게 하고 전역 state 관리를 더 구조적으로 지원
+- store, reducer, action 등의 개념을 통해 state와 state dispatch를 관리
+
+(장점)
+
+- 명확한 상태 관리 구조 : 액션과 reducer를 통해 state dispatch과정을 예측 가능하게 만들고 코드의 가독성을 높임
+- 미들웨어 지원
+- 디버깅 도구 : Redux DevTools를 통해 상태 변화 디버깅 좋아짐
+- 모든 프레임워크와 호환 : React뿐만 아니라 다른 JavaScript 프레임워크도 함께 사용 가눙
+
 # 2024-11-13
 
 UI 프레임 워크
