@@ -2,6 +2,124 @@
 
 # 202230234 조아연
 
+# 2024-11-27
+
+Context API vs Redux  
+[Context API]
+
+- React에서 기본으로 제공하는 상태 관리 도구로, 외부 라이브러리 설치 없이 사용 가능
+- Context API는 주로 전역 상태를 관리하는데 사용
+- ReactcreateContext()로 생성한 Context 객체와 Provider 컴포넌트를 사용해 상태를 하위 컴포넌트에 전달
+
+(장점)
+
+- 간단하고 가볍 : 외부 라이브러리 설치 필요 없음
+- 적은 절성 필요 : 간단한 구조를 갖고 있기 때문
+
+(단점)
+
+- 복잡한 상태 관리 한계 : 상태가 복잡하거나 다양한 액션을 통해 변경이 이루어져야 하는 경우 관리가 어려워질 수 있다
+- 성능문제 : 상태가 업데이트 되면 해당 상태를 사용하는 모든 하위 컴포넌트가 다시 랜더릉 되므로, 상태 범위가 넓을 경우 성능에 영향을 미칠 수 있음
+- 디버깅 도구 부족 : 상태 변경 과정을 추적하고 관리하는 도구가 제공되지 않음
+
+[Redux]
+
+- 전역 상태를 관리하기 위한 독립적인 state 관리 라이브러리
+- 상태의 변경을 예측 가능하게 하고 전역 state 관리를 더 구조적으로 지원
+- store, reducer, action 등의 개념을 통해 state와 state dispatch를 관리
+
+(장점)
+
+- 명확한 상태 관리 구조 : 액션과 reducer를 통해 state dispatch과정을 예측 가능하게 만들고 코드의 가독성을 높임
+- 미들웨어 지원
+- 디버깅 도구 : Redux DevTools를 통해 상태 변화 디버깅 좋아짐
+- 모든 프레임워크와 호환 : React뿐만 아니라 다른 JavaScript 프레임워크도 함께 사용 가눙
+
+Redux를 사용하기 위해 필요한 패키지 설치
+
+```js
+npm install @reduxjs/toolkit react-redux
+```
+
+```js
+import { configureStore, createSlice } from "@reduxjs/toolkit";
+
+export const counterSlice = createSlice({
+  name: "joo",
+  initialState: {
+    value: 0,
+  },
+  reducers: {
+    increment: (state) => {
+      state.value += 1;
+    },
+    decrement: (state) => {
+      state.value -= 1;
+    },
+  },
+});
+
+// `counterSlice.reducer`를 기본 내보내기
+export default counterSlice.reducer;
+
+// 액션 내보내기
+export const { increment, decrement } = counterSlice.actions;
+```
+
+store 설정 파일을 생성
+
+- store 파일은 Redux 스토어를 설정하는 파일로, 기능별 Slice파일을 이곳에 등록
+- 즉 모든 reducer를 한곳에 모아 중앙에서 관리하기 위한 파일
+- 새로은 기능이 추가 되면 해당 기능의 Slice를 생성하고 등록
+
+```js
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from "../fect/counter/counterSlice";
+
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+  },
+});
+```
+
+Counter Compomemt 파일을 생성
+
+- useSelector는 Redux store 상태를 선택(조회)하는 데 사용
+- 컴포넌트 내부에서 이 Hook을 사용하면 Redux store에서 필요한 state를 가져와 사용할 수 있음
+- useDispatch는 Redux store의 액션을 디스패치하는 데 사용
+
+```js
+"use client";
+import { useSelector, useDispatch } from "react-redux";
+import { increment, decrement } from "./counterSlice";
+
+export function Counter() {
+  const counter = useSelector((state) => state.counter.value);
+  const dispatch = useDispatch();
+
+  return (
+    <div>
+      <h1>Counter: {counter}</h1>
+      <button onClick={() => dispatch(increment())}>Increment</button>
+      <button onClick={() => dispatch(decrement())}>Decrement</button>
+    </div>
+  );
+}
+```
+
+```js
+CounterProvider;
+("use client");
+import { Provider } from "react-redux";
+import { Store } from "@reduxjs/toolkit";
+import { store } from "./store";
+
+export default function CounterProdiver({ children }) {
+  return <Provider store={store}>{children}</Provider>;
+}
+```
+
 # 2024-11-20
 
 Next.js의 Props 전달 방법  
